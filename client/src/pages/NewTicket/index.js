@@ -1,10 +1,12 @@
 import { useState } from "react";
+import api from "../../api";
 import Button from "../../components/Button";
 import FormGroup from "../../components/FormGroup";
 import Input from "../../components/Input";
 import PageHeader from "../../components/PageHeader";
 import Select from "../../components/Select";
 import { ButtonContainer, Container, Form } from "./styles";
+import { toast } from "react-toastify";
 
 export default function NewContact() {
   const [datetime, setDatetime] = useState("");
@@ -12,8 +14,14 @@ export default function NewContact() {
   const [time, setTime] = useState("");
   const isFormValid = datetime && place && time;
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
+    try {
+      await api.post("/ticket", { datetime, place, time });
+      toast.success("Ticket criado com sucesso!");
+    } catch (_error) {
+      toast.error("Erro ao criar ticket.")
+    }
   }
 
   return (
