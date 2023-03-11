@@ -12,16 +12,30 @@ export default function NewContact() {
   const [datetime, setDatetime] = useState("");
   const [place, setPlace] = useState("");
   const [time, setTime] = useState("");
-  const isFormValid = datetime && place && time;
+  const [quantity, setQuantity] = useState("");
+  const isFormValid = datetime && place && time && quantity;
 
   async function handleSubmit(event) {
     event.preventDefault();
     try {
-      await api.post("/ticket", { datetime, place, time });
+      const data = { datetime, place, time, quantity };
+      await api.post("/ticket", data);
       toast.success("Ticket criado com sucesso!");
+      setDatetime("");
     } catch (_error) {
-      toast.error("Erro ao criar ticket.")
+      toast.error("Erro ao criar ticket.");
     }
+  }
+  function handleDatetimeChange(e) {
+    if (e.target.value < new Date().toISOString()) {
+      setDatetime("");
+      return toast.error("Data inválida.");
+    }
+    setDatetime(e.target.value);
+  }
+  function handleQuantityChange(e) {
+    if (e.target.valueAsNumber < 0) return setQuantity("");
+    setQuantity(e.target.valueAsNumber);
   }
 
   return (
@@ -33,7 +47,7 @@ export default function NewContact() {
             <Input
               type="datetime-local"
               value={datetime}
-              onChange={(e) => setDatetime(e.target.value)}
+              onChange={handleDatetimeChange}
             />
           </FormGroup>
           <FormGroup>
@@ -43,6 +57,14 @@ export default function NewContact() {
               <option value="Santo Amaro">Santo Amaro</option>
               <option value="Brasília">Brasília</option>
             </Select>
+          </FormGroup>
+          <FormGroup>
+            <Input
+              placeholder="Quantidade de pessoas: *"
+              type="number"
+              value={quantity}
+              onChange={handleQuantityChange}
+            />
           </FormGroup>
           <FormGroup>
             <Select value={time} onChange={(e) => setTime(e.target.value)}>

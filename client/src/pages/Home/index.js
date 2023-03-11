@@ -1,9 +1,19 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Container, Header, TableContainer } from "./styles";
+import api from "../../api";
 import TableHead from "../../components/TableHead";
 import TableRow from "../../components/TableRow";
+import { Container, Header, TableContainer } from "./styles";
 
 export default function Home() {
+  const [tickets, setTickets] = useState([]);
+
+  useEffect(() => {
+    api.get("/tickets").then(({ data }) => setTickets(data));
+  }, []);
+
+  console.log(tickets);
+
   return (
     <>
       <Header>
@@ -22,13 +32,20 @@ export default function Home() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <TableRow>1</TableRow>
-              <TableRow>DD/MM/AAAA - HH:MM</TableRow>
-              <TableRow>MG-1</TableRow>
-              <TableRow>X</TableRow>
-              <TableRow>3hrs</TableRow>
-            </tr>
+            {tickets.map((row) => (
+              <tr key={row.id}>
+                <TableRow>{row.id}</TableRow>
+                <TableRow>
+                  {new Date(row.data).toLocaleString("pt-br", {
+                    dateStyle: "short",
+                    timeStyle: "short",
+                  })}
+                </TableRow>
+                <TableRow>{row.unidade}</TableRow>
+                <TableRow>{row.quantidade}</TableRow>
+                <TableRow>{row.duracao} Horas</TableRow>
+              </tr>
+            ))}
           </tbody>
         </TableContainer>
       </Container>

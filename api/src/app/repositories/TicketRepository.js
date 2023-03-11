@@ -1,12 +1,17 @@
 const db = require("../../database");
 
 class TicketRepository {
-  async create({ datetime, place, time }) {
+  async findAll() {
+    const rows = await db.query(`SELECT * FROM tickets ORDER BY 1`);
+    return rows;
+  }
+
+  async create({ datetime, place, time, quantity }) {
     await db.query(
       `INSERT INTO tickets
-      (data, unidade, duracao)
-      VALUES ($1, $2, $3)`,
-      [datetime, place, time]
+      (data, unidade, duracao, quantidade)
+      VALUES ($1, $2, $3, $4)`,
+      [datetime, place, time, quantity]
     );
   }
 }
