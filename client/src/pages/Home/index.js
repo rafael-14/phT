@@ -1,18 +1,29 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import { useTheme } from "styled-components";
 import api from "../../api";
 import TableHead from "../../components/TableHead";
 import TableRow from "../../components/TableRow";
-import { Container, Header, TableContainer } from "./styles";
+import { Container, Header, TableContainer, Pagination } from "./styles";
 
 export default function Home() {
   const [tickets, setTickets] = useState([]);
+  const [count, setCount] = useState(0);
+  const { colors } = useTheme();
+  const [page] = useSearchParams();
 
   useEffect(() => {
-    api.get("/tickets").then(({ data }) => setTickets(data));
-  }, []);
-
-  console.log(tickets);
+    api
+      .get("/tickets", {
+        params: {
+          page: page.get("page") || 1,
+        },
+      })
+      .then(({ data }) => {
+        setTickets(data.tickets);
+        setCount(Number(data.count));
+      });
+  }, [page]);
 
   return (
     <>
@@ -32,8 +43,16 @@ export default function Home() {
             </tr>
           </thead>
           <tbody>
-            {tickets.map((row) => (
-              <tr key={row.id}>
+            {tickets.map((row, index) => (
+              <tr
+                key={row.id}
+                style={{
+                  backgroundColor:
+                    index % 2 === 0
+                      ? colors.primary.lighter
+                      : colors.background,
+                }}
+              >
                 <TableRow>{row.id}</TableRow>
                 <TableRow>
                   {new Date(row.data).toLocaleString("pt-br", {
@@ -49,6 +68,29 @@ export default function Home() {
           </tbody>
         </TableContainer>
       </Container>
+      {count > 1 && (
+        <Pagination>
+          <a href={`?page=${Number(page.get("page")) - 1}`}>&laquo;</a>
+          {Array(count)
+            .fill(1)
+            .map((_row, index) => (
+              <div key={index}>
+                <a
+                  href={`?page=${index + 1}`}
+                  className={
+                    Number(page.get("page")) === index + 1 ||
+                    (!page.get("page") && !index)
+                      ? "active"
+                      : "inactive"
+                  }
+                >
+                  {index + 1}
+                </a>
+              </div>
+            ))}
+          <a href={`?page=${Number(page.get("page")) + 1}`}>&raquo;</a>
+        </Pagination>
+      )}
     </>
   );
 }

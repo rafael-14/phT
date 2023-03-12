@@ -1,8 +1,11 @@
 const db = require("../../database");
 
 class TicketRepository {
-  async findAll() {
-    const rows = await db.query(`SELECT * FROM tickets ORDER BY 1`);
+  async findAll(page) {
+    const rows = await db.query(`
+      SELECT * FROM tickets ORDER BY data
+      LIMIT 10 OFFSET 10 * ${page - 1}
+    `);
     return rows;
   }
 

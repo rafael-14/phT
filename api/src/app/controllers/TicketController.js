@@ -1,9 +1,12 @@
+const CountRepository = require("../repositories/CountRepository");
 const TicketRepository = require("../repositories/TicketRepository");
 
 class TicketController {
-  async index(_req, res) {
-    const tickets = await TicketRepository.findAll();
-    res.json(tickets);
+  async index(req, res) {
+    const { page } = req.query;
+    const count = await CountRepository.count("tickets");
+    const tickets = await TicketRepository.findAll(page);
+    res.json({ tickets, count });
   }
 
   async store(req, res) {

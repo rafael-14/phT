@@ -34,8 +34,8 @@ export default function NewContact() {
     setDatetime(e.target.value);
   }
   function handleQuantityChange(e) {
-    if (e.target.valueAsNumber < 0) return setQuantity("");
-    setQuantity(e.target.valueAsNumber);
+    if (e.target.value < 0) return setQuantity("");
+    setQuantity(e.target.value);
   }
 
   return (
@@ -61,7 +61,8 @@ export default function NewContact() {
           <FormGroup>
             <Input
               placeholder="Quantidade de pessoas: *"
-              type="number"
+              type="tel"
+              maxLength={2}
               value={quantity}
               onChange={handleQuantityChange}
             />
