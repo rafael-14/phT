@@ -70,7 +70,9 @@ export default function Home() {
       </Container>
       {count > 1 && (
         <Pagination>
-          <a href={`?page=${Number(page.get("page")) - 1}`}>&laquo;</a>
+          {page.get("page") > 1 && (
+            <a href={`?page=${Number(page.get("page")) - 1}`}>&laquo;</a>
+          )}
           {Array(count)
             .fill(1)
             .map((_row, index) => (
@@ -88,7 +90,9 @@ export default function Home() {
                 </a>
               </div>
             ))}
-          <a href={`?page=${Number(page.get("page")) + 1}`}>&raquo;</a>
+          {page.get("page") < count && (
+            <a href={`?page=${Number(page.get("page")) + 1}`}>&raquo;</a>
+          )}
         </Pagination>
       )}
     </>

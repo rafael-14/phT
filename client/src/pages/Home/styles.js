@@ -51,5 +51,8 @@ export const Pagination = styled.div`
     background: ${({ theme }) => theme.colors.primary.main};
     color: #fff;
     border-radius: 8px;
+    &:hover {
+      background: ${({ theme }) => theme.colors.primary.main};
+    }
   }
 `;
