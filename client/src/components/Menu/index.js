@@ -3,7 +3,6 @@ import { Header } from "./styles";
 
 export default function Menu() {
   const { pathname } = useLocation();
-  console.log(pathname === "/" ? "active" : "inactive");
 
   return (
     <Header>

@@ -31,8 +31,10 @@ export default function NewContact() {
   }
   function handleDateChange(e) {
     if (
-      e.target.value <= new Date().toISOString().slice(0, 10) &&
-      time <= new Date().getHours()
+      (!time && e.target.value < new Date().toISOString().slice(0, 10)) ||
+      (time &&
+        e.target.value <= new Date().toISOString().slice(0, 10) &&
+        Number(time) < new Date().getHours())
     ) {
       clearDatetime();
       return toast.error("Data inválida.");
@@ -42,7 +44,7 @@ export default function NewContact() {
   function handleTimeChange(e) {
     if (
       e.target.value <= new Date().getHours() &&
-      date <= new Date().toISOString().slice(0, 10)
+      date === new Date().toISOString().slice(0, 10)
     ) {
       clearDatetime();
       return toast.error("Horário inválido.");
@@ -50,7 +52,7 @@ export default function NewContact() {
     setTime(e.target.value);
   }
   function handleQuantityChange(e) {
-    if (e.target.value < 0) return setQuantity("");
+    if (e.target.value < 0 || isNaN(e.target.value)) return setQuantity("");
     setQuantity(e.target.value);
   }
 
