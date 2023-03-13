@@ -9,29 +9,31 @@ import { ButtonContainer, Container, Form } from "./styles";
 import { toast } from "react-toastify";
 
 export default function NewContact() {
-  const [datetime, setDatetime] = useState("");
+  const [date, setDate] = useState("");
   const [place, setPlace] = useState("");
   const [time, setTime] = useState("");
   const [quantity, setQuantity] = useState("");
-  const isFormValid = datetime && place && time && quantity;
+  const [duration, setDuration] = useState("");
+  const isFormValid = date && place && time && quantity && duration;
 
   async function handleSubmit(event) {
     event.preventDefault();
     try {
-      const data = { datetime, place, time, quantity };
+      const data = { date, place, time, quantity, duration };
       await api.post("/ticket", data);
       toast.success("Ticket criado com sucesso!");
-      setDatetime("");
+      setDate("");
+      setTime("");
     } catch (_error) {
       toast.error("Erro ao criar ticket.");
     }
   }
   function handleDatetimeChange(e) {
     if (e.target.value < new Date().toISOString()) {
-      setDatetime("");
+      setDate("");
       return toast.error("Data inválida.");
     }
-    setDatetime(e.target.value);
+    setDate(e.target.value);
   }
   function handleQuantityChange(e) {
     if (e.target.value < 0) return setQuantity("");
@@ -44,11 +46,22 @@ export default function NewContact() {
         <PageHeader title="Novo Ticket" />
         <Form onSubmit={handleSubmit} noValidate>
           <FormGroup>
-            <Input
-              type="datetime-local"
-              value={datetime}
-              onChange={handleDatetimeChange}
-            />
+            <Input type="date" value={date} onChange={handleDatetimeChange} />
+          </FormGroup>
+          <FormGroup>
+            <Select value={time} onChange={(e) => setTime(e.target.value)}>
+              <option value="">Horário</option>
+              {Array(6)
+                .fill(1)
+                .map((_row, index) => (
+                  <option
+                    value={index + 13}
+                    disabled={Number(duration) === 3 && index === 5}
+                  >
+                    {index + 13}
+                  </option>
+                ))}
+            </Select>
           </FormGroup>
           <FormGroup>
             <Select value={place} onChange={(e) => setPlace(e.target.value)}>
@@ -68,10 +81,15 @@ export default function NewContact() {
             />
           </FormGroup>
           <FormGroup>
-            <Select value={time} onChange={(e) => setTime(e.target.value)}>
+            <Select
+              value={duration}
+              onChange={(e) => setDuration(e.target.value)}
+            >
               <option value="">Duração</option>
               <option value={2}>2 horas</option>
-              <option value={3}>3 horas</option>
+              <option value={3} disabled={Number(time) === 18}>
+                3 horas
+              </option>
             </Select>
           </FormGroup>
 

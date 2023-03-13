@@ -40,6 +40,7 @@ export default function Home() {
               <TableHead> Unidade </TableHead>
               <TableHead> Quantidade de Pessoas </TableHead>
               <TableHead> Duração </TableHead>
+              <TableHead> Valor </TableHead>
             </tr>
           </thead>
           <tbody>
@@ -63,6 +64,12 @@ export default function Home() {
                 <TableRow>{row.unidade}</TableRow>
                 <TableRow>{row.quantidade}</TableRow>
                 <TableRow>{row.duracao} Horas</TableRow>
+                <TableRow>
+                  {Number(row.valor).toLocaleString("pt-br", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </TableRow>
               </tr>
             ))}
           </tbody>

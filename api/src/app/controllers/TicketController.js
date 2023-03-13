@@ -10,10 +10,18 @@ class TicketController {
   }
 
   async store(req, res) {
-    const { datetime, place, time, quantity } = req.body;
+    const { date, place, time, quantity, duration } = req.body;
+    const datetime = `${date} ${time}:00`;
     const datetimeNow = new Date().toISOString();
     if (datetime < datetimeNow) return res.sendStatus(400);
-    await TicketRepository.create({ datetime, place, time, quantity });
+    const value = quantity * (Number(time) === 2 ? 89 : 109);
+    await TicketRepository.create({
+      datetime,
+      place,
+      duration,
+      quantity,
+      value,
+    });
     res.sendStatus(200);
   }
 }

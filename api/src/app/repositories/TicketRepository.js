@@ -9,12 +9,12 @@ class TicketRepository {
     return rows;
   }
 
-  async create({ datetime, place, time, quantity }) {
+  async create({ datetime, place, duration, quantity, value }) {
     await db.query(
       `INSERT INTO tickets
-      (data, unidade, duracao, quantidade)
-      VALUES ($1, $2, $3, $4)`,
-      [datetime, place, time, quantity]
+      (data, unidade, duracao, quantidade, valor)
+      VALUES ($1, $2, $3, $4, $5)`,
+      [datetime, place, duration, quantity, value]
     );
   }
 }

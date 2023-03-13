@@ -5,5 +5,6 @@ CREATE TABLE IF NOT EXISTS tickets (
     data TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     unidade VARCHAR (20) NOT NULL,
     duracao INTEGER NOT NULL,
-    quantidade INTEGER NOT NULL
+    quantidade INTEGER NOT NULL,
+    valor INTEGER NOT NULL
 );
