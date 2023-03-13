@@ -16,24 +16,40 @@ export default function NewContact() {
   const [duration, setDuration] = useState("");
   const isFormValid = date && place && time && quantity && duration;
 
+  function clearDatetime() {
+    setDate("");
+    setTime("");
+  }
   async function handleSubmit(event) {
     event.preventDefault();
     try {
       const data = { date, place, time, quantity, duration };
       await api.post("/ticket", data);
       toast.success("Ticket criado com sucesso!");
-      setDate("");
-      setTime("");
+      clearDatetime();
     } catch (_error) {
       toast.error("Erro ao criar ticket.");
     }
   }
-  function handleDatetimeChange(e) {
-    if (e.target.value < new Date().toISOString()) {
-      setDate("");
+  function handleDateChange(e) {
+    if (
+      e.target.value <= new Date().toISOString().slice(0, 10) &&
+      time <= new Date().getHours()
+    ) {
+      clearDatetime();
       return toast.error("Data inválida.");
     }
     setDate(e.target.value);
+  }
+  function handleTimeChange(e) {
+    if (
+      e.target.value <= new Date().getHours() &&
+      date <= new Date().toISOString().slice(0, 10)
+    ) {
+      clearDatetime();
+      return toast.error("Horário inválido.");
+    }
+    setTime(e.target.value);
   }
   function handleQuantityChange(e) {
     if (e.target.value < 0) return setQuantity("");
@@ -46,15 +62,16 @@ export default function NewContact() {
         <PageHeader title="Novo Ticket" />
         <Form onSubmit={handleSubmit} noValidate>
           <FormGroup>
-            <Input type="date" value={date} onChange={handleDatetimeChange} />
+            <Input type="date" value={date} onChange={handleDateChange} />
           </FormGroup>
           <FormGroup>
-            <Select value={time} onChange={(e) => setTime(e.target.value)}>
+            <Select value={time} onChange={handleTimeChange}>
               <option value="">Horário</option>
               {Array(6)
                 .fill(1)
                 .map((_row, index) => (
                   <option
+                    key={index}
                     value={index + 13}
                     disabled={Number(duration) === 3 && index === 5}
                   >
