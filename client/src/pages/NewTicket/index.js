@@ -1,7 +1,6 @@
 import { useState } from "react";
 import api from "../../api";
 import Button from "../../components/Button";
-import FormGroup from "../../components/FormGroup";
 import Input from "../../components/Input";
 import PageHeader from "../../components/PageHeader";
 import Select from "../../components/Select";
@@ -61,55 +60,44 @@ export default function NewContact() {
       <div>
         <PageHeader title="Novo Ticket" />
         <Form onSubmit={handleSubmit} noValidate>
-          <FormGroup>
-            <Input type="date" value={date} onChange={handleDateChange} />
-          </FormGroup>
-          <FormGroup>
-            <Select value={time} onChange={handleTimeChange}>
-              <option value="">Horário</option>
-              {Array(6)
-                .fill(1)
-                .map((_row, index) => (
-                  <option
-                    key={index}
-                    value={index + 13}
-                    disabled={Number(duration) === 3 && index === 5}
-                  >
-                    {index + 13}
-                  </option>
-                ))}
-            </Select>
-          </FormGroup>
-          <FormGroup>
-            <Select value={place} onChange={(e) => setPlace(e.target.value)}>
-              <option value="">Unidade</option>
-              <option value="Tatuapé">Tatuapé</option>
-              <option value="Santo Amaro">Santo Amaro</option>
-              <option value="Brasília">Brasília</option>
-            </Select>
-          </FormGroup>
-          <FormGroup>
-            <Input
-              placeholder="Quantidade de pessoas: *"
-              type="tel"
-              maxLength={2}
-              value={quantity}
-              onChange={handleQuantityChange}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Select
-              value={duration}
-              onChange={(e) => setDuration(e.target.value)}
-            >
-              <option value="">Duração</option>
-              <option value={2}>2 horas</option>
-              <option value={3} disabled={Number(time) === 18}>
-                3 horas
-              </option>
-            </Select>
-          </FormGroup>
-
+          <Input type="date" value={date} onChange={handleDateChange} />
+          <Select value={time} onChange={handleTimeChange}>
+            <option value="">Horário</option>
+            {Array(6)
+              .fill(1)
+              .map((_row, index) => (
+                <option
+                  key={index}
+                  value={index + 13}
+                  disabled={Number(duration) === 3 && index === 5}
+                >
+                  {index + 13}
+                </option>
+              ))}
+          </Select>
+          <Select value={place} onChange={(e) => setPlace(e.target.value)}>
+            <option value="">Unidade</option>
+            <option value="Tatuapé">Tatuapé</option>
+            <option value="Santo Amaro">Santo Amaro</option>
+            <option value="Brasília">Brasília</option>
+          </Select>
+          <Input
+            placeholder="Quantidade de pessoas: *"
+            type="tel"
+            maxLength={2}
+            value={quantity}
+            onChange={handleQuantityChange}
+          />
+          <Select
+            value={duration}
+            onChange={(e) => setDuration(e.target.value)}
+          >
+            <option value="">Duração</option>
+            <option value={2}>2 horas</option>
+            <option value={3} disabled={Number(time) === 18}>
+              3 horas
+            </option>
+          </Select>
           <ButtonContainer>
             <Button type="submit" disabled={!isFormValid}>
               Cadastrar

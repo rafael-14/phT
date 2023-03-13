@@ -6,7 +6,11 @@ export const Container = styled.div`
 `;
 
 export const Form = styled.form`
-  min-width: 500px;
+  max-width: 500px;
+  input,
+  select {
+    margin-top: 16px;
+  }
 `;
 
 export const ButtonContainer = styled.div`
