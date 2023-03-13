@@ -1,11 +1,10 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 import api from "../../api";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
-import PageHeader from "../../components/PageHeader";
 import Select from "../../components/Select";
 import { ButtonContainer, Container, Form } from "./styles";
-import { toast } from "react-toastify";
 
 export default function NewContact() {
   const [date, setDate] = useState("");
@@ -58,7 +57,6 @@ export default function NewContact() {
   return (
     <Container>
       <div>
-        <PageHeader title="Novo Ticket" />
         <Form onSubmit={handleSubmit} noValidate>
           <Input type="date" value={date} onChange={handleDateChange} />
           <Select value={time} onChange={handleTimeChange}>

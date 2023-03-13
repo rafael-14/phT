@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useTheme } from "styled-components";
 import api from "../../api";
 import TableHead from "../../components/TableHead";
 import TableRow from "../../components/TableRow";
-import { Container, Header, TableContainer, Pagination } from "./styles";
+import { Container, Pagination, TableContainer } from "./styles";
 
 export default function Home() {
   const [tickets, setTickets] = useState([]);
@@ -27,10 +27,6 @@ export default function Home() {
 
   return (
     <>
-      <Header>
-        <Link to="/sales_report">Relatório de vendas</Link>
-        <Link to="/new_ticket">Novo ticket</Link>
-      </Header>
       <Container>
         <TableContainer>
           <thead>

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
+import api from "../../api";
 import Input from "../../components/Input";
-import PageHeader from "../../components/PageHeader";
+import SubTotalRow from "../../components/SubTotalRow";
 import TableHead from "../../components/TableHead";
 import TableRow from "../../components/TableRow";
-import SubTotalRow from "../../components/SubTotalRow";
 import { Container, DateContainer, TableContainer } from "./styles";
-import api from "../../api";
 
 export default function SalesReport() {
   const [initialDate, setInitialDate] = useState("");
@@ -37,7 +36,6 @@ export default function SalesReport() {
     <>
       <Container>
         <div>
-          <PageHeader title="Relatório de Vendas" />
           <DateContainer>
             <Input
               style={{ marginInlineEnd: "16px" }}
