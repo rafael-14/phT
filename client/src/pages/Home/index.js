@@ -1,32 +1,38 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useTheme } from "styled-components";
-import api from "../../api";
 import TableHead from "../../components/TableHead";
 import TableRow from "../../components/TableRow";
+import useLoader from "../../hooks/useLoader";
+import TicketsService from "../../services/TicketsService";
 import { Container, Pagination, TableContainer } from "./styles";
 
 export default function Home() {
   const [tickets, setTickets] = useState([]);
   const [count, setCount] = useState(0);
+  const { Loader, isLoading, setIsLoading } = useLoader();
   const { colors } = useTheme();
   const [page] = useSearchParams();
 
   useEffect(() => {
-    api
-      .get("/tickets", {
-        params: {
-          page: page.get("page") || 1,
-        },
-      })
-      .then(({ data }) => {
-        setTickets(data.tickets);
-        setCount(Number(data.count));
-      });
+    async function loadTickets() {
+      try {
+        setIsLoading(true);
+        const ticketsList = await TicketsService.listTickets(page.get("page") || 1);
+        setTickets(ticketsList.tickets);
+        setCount(Number(ticketsList.count));
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadTickets();
   }, [page]);
 
   return (
     <>
+      <Loader isLoading={isLoading} />
       <Container>
         <TableContainer>
           <thead>

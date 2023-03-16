@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
-import api from "../../api";
+import { toast } from "react-toastify";
 import Input from "../../components/Input";
 import SubTotalRow from "../../components/SubTotalRow";
 import TableHead from "../../components/TableHead";
 import TableRow from "../../components/TableRow";
+import useLoader from "../../hooks/useLoader";
+import SalesReportService from "../../services/SalesReportService";
 import { Container, DateContainer, TableContainer } from "./styles";
 
 export default function SalesReport() {
   const [initialDate, setInitialDate] = useState("");
   const [finalDate, setFinalDate] = useState("");
   const [salesReport, setSalesReport] = useState([]);
+  const { Loader, isLoading, setIsLoading } = useLoader();
 
   function getTotal(place, field = "valor_total") {
     const totals = place
@@ -21,19 +24,38 @@ export default function SalesReport() {
     return total;
   }
 
+  function handleChangeInitialDate(e) {
+    if (e.target.value > finalDate && finalDate !== "")
+      return toast.error("Data inicial inválida.");
+    setInitialDate(e.target.value);
+  }
+  function handleChangeFinalDate(e) {
+    if (e.target.value < initialDate && initialDate !== "")
+      return toast.error("Data final inválida.");
+    setFinalDate(e.target.value);
+  }
+
   useEffect(() => {
-    api
-      .get("/sales_report", {
-        params: {
+    async function loadSalesReport() {
+      try {
+        setIsLoading(true);
+        const salesReportList = await SalesReportService.listSalesReport(
           initialDate,
-          finalDate,
-        },
-      })
-      .then(({ data }) => setSalesReport(data));
+          finalDate
+        );
+        setSalesReport(salesReportList);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadSalesReport();
   }, [initialDate, finalDate]);
 
   return (
     <>
+      <Loader isLoading={isLoading} />
       <Container>
         <div>
           <DateContainer>
@@ -41,12 +63,12 @@ export default function SalesReport() {
               style={{ marginInlineEnd: "16px" }}
               type="date"
               value={initialDate}
-              onChange={(e) => setInitialDate(e.target.value)}
+              onChange={handleChangeInitialDate}
             />
             <Input
               type="date"
               value={finalDate}
-              onChange={(e) => setFinalDate(e.target.value)}
+              onChange={handleChangeFinalDate}
             />
           </DateContainer>
         </div>

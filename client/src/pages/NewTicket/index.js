@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import api from "../../api";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import Select from "../../components/Select";
+import TicketsService from "../../services/TicketsService";
 import { ButtonContainer, Container, Form } from "./styles";
 
 export default function NewContact() {
@@ -22,7 +22,7 @@ export default function NewContact() {
     event.preventDefault();
     try {
       const data = { date, place, time, quantity, duration };
-      await api.post("/ticket", data);
+      await TicketsService.createTicket(data);
       toast.success("Ticket criado com sucesso!");
       clearDatetime();
     } catch (_error) {
